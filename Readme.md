@@ -40,4 +40,5 @@ Users can fill in their details, preview the biodata instantly, and download it 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/biodata-creator.git
+[   git clone https://github.com/your-username/biodata-creator.git](https://anubhav-webdev.github.io/Bio-Data-Creator/)
+
