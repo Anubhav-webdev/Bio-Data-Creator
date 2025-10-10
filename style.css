@@ -23,7 +23,7 @@ body.professional {
      --accent: #ff009d;
      --accent-light: #33a28c;
      --accent-dark: #005944;
-     --border: #c1d3d4;
+     --border: #000000ff;
      --edu-color: #d0f0fd;
 }
 
@@ -219,4 +219,91 @@ select.theme {
      border: 1px dashed var(--accent);
      border-radius: 6px;
      pointer-events: none;
+}
+
+.objective-container {
+     display: grid;
+     grid-template-columns: 3fr auto;
+     /* Textarea takes 3x space, button auto */
+     gap: 8px;
+     align-items: center;
+     width: 100%;
+}
+
+/* Textarea styling */
+.objective-container textarea {
+     width: 100%;
+     padding: 8px 10px;
+     border: 1px solid var(--border);
+     border-radius: 6px;
+     resize: none;
+     font-size: 0.9rem;
+}
+
+/* Button styling */
+.objective-container button {
+     padding: 6px 12px;
+     border: none;
+     border-radius: 6px;
+     background: var(--accent);
+     color: white;
+     cursor: pointer;
+     font-size: 0.9rem;
+     transition: all 0.3s ease;
+}
+
+.objective-container button:hover {
+     opacity: 0.9;
+     transform: scale(1.02);
+}
+
+/* =============================
+   Responsive adjustments
+============================= */
+
+/* For small screens (mobile) */
+@media (max-width: 599px) {
+     .objective-container {
+          grid-template-columns: 1fr;
+          /* Stack vertically */
+     }
+
+     .objective-container button {
+          width: 100%;
+          /* Button full width below textarea */
+     }
+}
+
+/* For tablets (optional tweaks) */
+@media (min-width: 600px) and (max-width: 1024px) {
+     .objective-container {
+          grid-template-columns: 2.5fr auto;
+          /* Slightly smaller textarea proportion */
+     }
+}
+
+
+
+
+/* ==========================
+   Responsive Adjustments
+=========================== */
+
+/* Small devices (phones, < 600px) */
+@media (max-width: 599px) {
+
+     form,
+     .preview {
+          flex: 1 1 100%;
+          padding: 20px;
+     }
+
+     h2 {
+          font-size: 1.3rem;
+     }
+
+     button {
+          display: flexbox;
+          font-size: 0.85rem;
+     }
 }
