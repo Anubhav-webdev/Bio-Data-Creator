@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Biodata Creator with Themes</title>
+     <link rel="stylesheet" href="style.css">
+     <script>
+          document.addEventListener("contextmenu", (event) => event.preventDefault());
+     </script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+     <script src="engine.js" defer></script>
+</head>
+
+<body>
+     <div class="container">
+          <!-- Form -->
+          <form id="biodataForm">
+
+               <h2>Biodata Creator</h2>
+               <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <select class="theme" onchange="changeTheme(this.value)">
+                         <option value="default">Default</option>
+                         <option value="dark">Dark</option>
+                         <option value="professional">Professional</option>
+                    </select>
+               </div>
+               <label>Profile Picture</label>
+               <input type="file" id="profilePic" accept="image/*" onchange="handlePictureUpload(event)">
+               <img id="profilePicPreview"
+                    style="display:none;width:190px; height:160px;margin:10px 0 10px 0;border-radius:25;border:2px solid var(--accent);" />
+
+               <label>Name:</label>
+               <input type="text" id="name" placeholder="Enter your name" autofocus>
+
+               <label>Father’s Name</label>
+               <input type="text" placeholder="Enter your father's name" id="fname">
+
+               <label>Date of Birth</label>
+               <input type="date" id="dob">
+
+               <div id="gender">
+                    <label>Select Gender:</label>
+                    <input type="radio" name="gender" value="Female">Female
+                    <input type="radio" name="gender" value="Male">Male
+                    <input type="radio" name="gender" value="Other">Other
+               </div>
+
+               <label>Nationality</label>
+               <input type="text" placeholder="Enter your nationality" id="nationality">
+
+               <div id="maritalStatus">
+                    <label>Marital Status</label>
+                    <input type="radio" name="marital" value="Single">Single
+                    <input type="radio" name="marital" value="Married">Married
+               </div>
+
+               <label>Contact Number</label>
+               <input type="text" placeholder="Enter your contact number" id="phone">
+
+               <label>Email ID</label>
+               <input type="email" placeholder="Enter your email ID" id="email">
+
+               <label>Address</label>
+               <textarea id="address" rows="2" placeholder="Enter your address"></textarea>
+
+               <label>Career Objective</label>
+               <div style="display:flex;gap:8px;align-items:center;">
+                    <textarea id="objective" rows="2" placeholder="Enter your career objective"></textarea>
+                    <button type="button" onclick="suggestObjective()" style="padding:6px 10px;">AI Suggest</button>
+               </div>
+
+               <label>Educational Qualification</label>
+               <div id="education-section">
+                    <div class="edu-item">
+                         <label>Class/Degree</label>
+                         <input type="text" placeholder="e.g., B.Tech, 12th, Diploma" />
+
+                         <label>School/College</label>
+                         <input type="text" placeholder="e.g., XYZ College" />
+
+                         <label>Marks/Percentage</label>
+                         <input type="text" placeholder="e.g., 85%" />
+
+                         <label>Year of Passing</label>
+                         <input type="text" placeholder="e.g., 2024" />
+                    </div>
+               </div>
+               <button type="button" onclick="addEducation()">➕ Add More Education</button>
+
+               <label>Technical Skills</label>
+               <textarea id="skills" rows="2" placeholder="Example: HTML, CSS, JS, Python"></textarea>
+
+               <!-- ...existing code... -->
+
+               <label>Projects</label>
+               <div id="projects-section">
+                    <div class="project-item">
+                         <input type="text" placeholder="Project Title" class="project-title" />
+                         <textarea placeholder="Project Description" class="project-desc"></textarea>
+                    </div>
+               </div>
+               <button type="button" onclick="addProject()">➕ Add More Project</button>
+
+
+               <label>Strengths</label>
+               <div style="display:flex;gap:8px;align-items:center;">
+                    <textarea id="strengths" rows="2" placeholder="Example: Quick Learner, Team Player"></textarea>
+                    <button type="button" onclick="suggestStrengths()" style="padding:6px 10px;">AI Suggest
+                         Strengths</button>
+               </div>
+               <label>Hobbies</label>
+               <div style="display:flex;gap:8px;align-items:center;">
+                    <textarea id="hobbies" rows="2" placeholder="Example: Coding, Music, Reading"></textarea>
+                    <button type="button" onclick="suggestHobbies()" style="padding:6px 10px;">AI Suggest
+                         Hobbies</button>
+               </div>
+               <button type="button" onclick="generateBiodata()">Preview Biodata</button>
+               <button type="button" onclick="downloadJPG()">Download as JPG</button>
+               <button type="button" onclick="refreshForm()">Refresh</button>
+
+
+          </form>
+
+          <!-- Preview -->
+          <div class="preview">
+               <h2>Preview</h2>
+               <div id="biodataPreview">
+                    <p>Fill out the form to preview your biodata.</p>
+               </div>
+          </div>
+     </div>
+</body>
+
+</html>
