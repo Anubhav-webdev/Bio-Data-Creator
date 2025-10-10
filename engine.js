@@ -325,14 +325,17 @@ function refreshForm() {
 }
 
 function downloadJPG() {
-     const node = document.querySelector('.a4-page');
-     if (!node) return alert("Please generate biodata preview first.");
-     html2canvas(node, { scale: 2 }).then(canvas => {
-          const link = document.createElement('a');
-          link.download = 'Biodata.jpg';
-          link.href = canvas.toDataURL('image/jpeg', 1.0);
-          link.click();
-     });
+     generateBiodata(); // Ensure preview is up to date
+     setTimeout(() => {
+          const node = document.querySelector('.a4-page');
+          if (!node) return alert("Please generate biodata preview first.");
+          html2canvas(node, { scale: 2 }).then(canvas => {
+               const link = document.createElement('a');
+               link.download = 'Biodata.jpg';
+               link.href = canvas.toDataURL('image/jpeg', 1.0);
+               link.click();
+          });
+     }, 200); // Wait for DOM update
 }
 function changeTheme(theme) {
      document.body.className = theme === "default" ? "" : theme;
