@@ -66,7 +66,7 @@
                <textarea id="address" rows="2" placeholder="Enter your address"></textarea>
 
                <label>Career Objective</label>
-               <div style="display:flex;gap:8px;align-items:center;">
+               <div class="objective-container">
                     <textarea id="objective" rows="2" placeholder="Enter your career objective"></textarea>
                     <button type="button" onclick="suggestObjective()" style="padding:6px 10px;">AI Suggest</button>
                </div>
@@ -92,8 +92,6 @@
                <label>Technical Skills</label>
                <textarea id="skills" rows="2" placeholder="Example: HTML, CSS, JS, Python"></textarea>
 
-               <!-- ...existing code... -->
-
                <label>Projects</label>
                <div id="projects-section">
                     <div class="project-item">
@@ -105,13 +103,13 @@
 
 
                <label>Strengths</label>
-               <div style="display:flex;gap:8px;align-items:center;">
+               <div class="objective-container">
                     <textarea id="strengths" rows="2" placeholder="Example: Quick Learner, Team Player"></textarea>
                     <button type="button" onclick="suggestStrengths()" style="padding:6px 10px;">AI Suggest
                          Strengths</button>
                </div>
                <label>Hobbies</label>
-               <div style="display:flex;gap:8px;align-items:center;">
+               <div class="objective-container">
                     <textarea id="hobbies" rows="2" placeholder="Example: Coding, Music, Reading"></textarea>
                     <button type="button" onclick="suggestHobbies()" style="padding:6px 10px;">AI Suggest
                          Hobbies</button>
