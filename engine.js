@@ -325,7 +325,7 @@ function refreshForm() {
 }
 
 function downloadJPG() {
-     const node = document.querySelector('biodataPreview');
+     const node = document.querySelector('.a4-page');
      if (!node) return alert("Please generate biodata preview first.");
      html2canvas(node, { scale: 2 }).then(canvas => {
           const link = document.createElement('a');
@@ -334,7 +334,6 @@ function downloadJPG() {
           link.click();
      });
 }
-
 function changeTheme(theme) {
      document.body.className = theme === "default" ? "" : theme;
 }
