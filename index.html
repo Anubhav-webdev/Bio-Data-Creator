@@ -6,15 +6,23 @@
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>Biodata Creator with Themes</title>
      <link rel="stylesheet" href="style.css">
-     <script>
+     <!-- <script>
           document.addEventListener("contextmenu", (event) => event.preventDefault());
-     </script>
+     </script> -->
      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
      <script src="engine.js" defer></script>
+     <script src="engine2.js" defer></script>
 </head>
 
 <body>
+     <div class="header">
+          <h1>Biodata & CV Creator</h1>
+          <p>Create professional biodata and CVs with ease.</p>
+          <button class="toggle-btn" onclick="toggleForms()">Switch to CV Creator</button>
+     </div>
      <div class="container">
+
           <!-- Form -->
           <form id="biodataForm">
 
@@ -49,6 +57,8 @@
 
                <label>Nationality</label>
                <input type="text" placeholder="Enter your nationality" id="nationality">
+               <label>Religion</label>
+               <input type="text" placeholder="Enter your religion" id="religion">
 
                <div id="maritalStatus">
                     <label>Marital Status</label>
@@ -64,12 +74,6 @@
 
                <label>Address</label>
                <textarea id="address" rows="2" placeholder="Enter your address"></textarea>
-
-               <label>Career Objective</label>
-               <div class="objective-container">
-                    <textarea id="objective" rows="2" placeholder="Enter your career objective"></textarea>
-                    <button type="button" onclick="suggestObjective()" style="padding:6px 10px;">AI Suggest</button>
-               </div>
 
                <label>Educational Qualification</label>
                <div id="education-section">
@@ -91,17 +95,8 @@
 
                <label>Technical Skills</label>
                <textarea id="skills" rows="2" placeholder="Example: HTML, CSS, JS, Python"></textarea>
-
-               <label>Projects</label>
-               <div id="projects-section">
-                    <div class="project-item">
-                         <input type="text" placeholder="Project Title" class="project-title" />
-                         <textarea placeholder="Project Description" class="project-desc"></textarea>
-                    </div>
-               </div>
-               <button type="button" onclick="addProject()">➕ Add More Project</button>
-
-
+               <label>Languages Known</label>
+               <textarea id="languages" rows="2" placeholder="Example: English,Hindi,Bengali"></textarea>
                <label>Strengths</label>
                <div class="objective-container">
                     <textarea id="strengths" rows="2" placeholder="Example: Quick Learner, Team Player"></textarea>
@@ -121,11 +116,93 @@
 
           </form>
 
+          <form id="cvForm" style="display: none;">
+
+               <h2>CV Creator</h2>
+
+               <label>Profile Picture</label>
+               <input type="file" id="cvProfilePic" accept="image/*" onchange="cvHandlePictureUpload(event)">
+               <img id="cvProfilePicPreview"
+                    style="display:none;width:190px; height:160px;margin:10px 0 10px 0;border-radius:25;border:2px solid var(--accent);" />
+
+               <label>Name:</label>
+               <input type="text" id="cvName" placeholder="Enter your name" autofocus>
+
+               <label>Phone</label>
+               <input type="text" placeholder="Enter your phone number" id="cvPhone">
+
+               <label>Email ID</label>
+               <input type="email" placeholder="Enter your email ID" id="cvEmail">
+
+               <label>LinkedIn</label>
+               <input type="text" placeholder="Enter your LinkedIn profile URL" id="cvLinkedIn">
+
+
+               <label>Career Objective</label>
+               <div class="objective-container">
+                    <textarea id="cvObjective" rows="2" placeholder="Enter your career objective"></textarea>
+                    <button type="button" onclick="cvSuggestObjective()" style="padding:6px 10px;">AI Suggest</button>
+               </div>
+
+               <label>Educational Qualification</label>
+               <div id="cvEducation-section">
+                    <div class="cvEdu-item">
+                         <label>Class/Degree</label>
+                         <input type="text" placeholder="e.g., B.Tech, 12th, Diploma" />
+
+                         <label>School/College</label>
+                         <input type="text" placeholder="e.g., XYZ College" />
+
+                         <label>Marks/Percentage</label>
+                         <input type="text" placeholder="e.g., 85%" />
+
+                         <label>Year of Passing</label>
+                         <input type="text" placeholder="e.g., 2025" />
+                    </div>
+               </div>
+               <button type="button" onclick="addEducation()">➕ Add More Education</button>
+
+               <label>Technical Skills</label>
+               <textarea id="cvSkills" rows="2" placeholder="Example: HTML, CSS, JS, Python"></textarea>
+
+               <label>Projects</label>
+               <div id="cvProjects-section">
+                    <div class="cvProject-item">
+                         <input type="text" placeholder="Project Title" class="cvProject-title" />
+                         <textarea placeholder="Project Description" class="cvProject-desc"></textarea>
+                    </div>
+               </div>
+               <button type="button" onclick="addProject()">➕ Add More Project</button>
+               <label>Achievements</label>
+               <textarea id="cvAchievements" rows="2" placeholder="Achievements"></textarea>
+
+               <label>Languages Known</label>
+               <textarea id="cvLanguages" rows="2" placeholder="Example: English,Hindi,Bengali"></textarea>
+
+               <label>Strengths</label>
+               <div class="objective-container">
+                    <textarea id="cvStrengths" rows="2" placeholder="Example: Quick Learner, Team Player"></textarea>
+                    <button type="button" onclick="cvSuggestStrengths()" style="padding:6px 10px;">AI Suggest
+                         Strengths</button>
+               </div>
+               <label>Hobbies</label>
+               <div class="objective-container">
+                    <textarea id="cvHobbies" rows="2" placeholder="Example: Coding, Music, Reading"></textarea>
+                    <button type="button" onclick="cvSuggestHobbies()" style="padding:6px 10px;">AI Suggest
+                         Hobbies</button>
+               </div>
+               <button type="button" onclick="generateCV()">Preview CV</button>
+               <button type="button" onclick="downloadJPG()">Download as JPG</button>
+               <button type="button" onclick="refreshForm()">Refresh</button>
+
+
+          </form>
+
           <!-- Preview -->
           <div class="preview">
                <h2>Preview</h2>
-               <div id="biodataPreview">
-                    <p>Fill out the form to preview your biodata.</p>
+               <div id="Preview">
+                    <p>Fill out the form to preview your biodata/CV.</p>
                </div>
           </div>
      </div>
