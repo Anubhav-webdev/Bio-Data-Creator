@@ -178,7 +178,7 @@ function addAutoSaveListeners() {
 // ========================
 // Education Section
 // ========================
-function addEducation() {
+function bioaddEducation() {
      const eduSection = document.getElementById("education-section");
      const eduItem = document.createElement("div");
      eduItem.className = "edu-item";
@@ -387,3 +387,4 @@ function toggleForms() {
      const toggleBtn = document.querySelector(".toggle-btn");
      toggleBtn.textContent = cvForm.style.display === "block" ? "Switch to Biodata Creator" : "Switch to CV Creator";
 }    
+
