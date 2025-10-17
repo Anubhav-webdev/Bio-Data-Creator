@@ -39,7 +39,7 @@ body {
      display: flex;
      flex-wrap: wrap;
      margin: 0;
-     padding: 15px;
+     padding: 10px;
 }
 
 .container {
@@ -69,7 +69,7 @@ form {
 
 h2 {
      color: var(--accent);
-     margin-top: 0;
+     margin-top: -10;
      font-size: 1.5rem;
 }
 
@@ -78,6 +78,8 @@ label {
      display: block;
      margin-top: 12px;
 }
+
+
 
 input,
 textarea,
@@ -170,11 +172,23 @@ select.theme {
 
      color: var(--accent);
      text-align: center;
+
 }
 
 .preview h3 {
      color: var(--accent);
+     margin: 1px;
+     padding: 1px;
+     font-size: 20px;
+     border-bottom: 2px solid var(--accent);
+     display: inline-block;
+}
 
+.preview p {
+     margin: 3px 0;
+     line-height: 1.7;
+     margin-left: 2px;
+     font-size: 1rem;
 }
 
 #biodataPreview h3 {
@@ -186,7 +200,7 @@ select.theme {
 }
 
 #biodataPreview p {
-     margin: 4px 0;
+     margin: 2px 0;
      line-height: 1.2;
      font-size: 0.90rem;
 }
@@ -199,13 +213,20 @@ select.theme {
      background: var(--card);
      color: var(--text);
      margin: 10px auto;
-     padding: 12mm 12mm;
+     padding: 10mm 12mm;
      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
      border: 2px solid var(--border);
      border-radius: 10px;
      box-sizing: border-box;
      overflow: hidden;
      position: relative;
+}
+
+.h2 {
+     margin-top: -10px;
+     font-size: 1.8rem;
+     color: red;
+     text-align: center;
 }
 
 /* Optional decorative border */
@@ -306,4 +327,61 @@ select.theme {
           display: flexbox;
           font-size: 0.85rem;
      }
+}
+
+
+/* ===== Header Section ===== */
+.header {
+     text-align: center;
+     background: linear-gradient(135deg, #4a00e0, #8e2de2);
+     color: #fff;
+     padding: 15px;
+     border-radius: 12px;
+     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+     margin-bottom: 15px;
+     transition: all 0.3s ease-in-out;
+     width: 100%;
+}
+
+.header:hover {
+     transform: translateY(-2px);
+     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.header h1 {
+     font-size: 2.2rem;
+     margin-bottom: 10px;
+     letter-spacing: 1px;
+     font-weight: 700;
+}
+
+.header p {
+     font-size: 1.1rem;
+     margin-bottom: 20px;
+     color: #00ffbb;
+     font-weight: bold;
+}
+
+/* ===== Toggle Button ===== */
+.toggle-btn {
+     background: #fff;
+     color: #4a00e0;
+     border: none;
+     padding: 10px 20px;
+     font-size: 1rem;
+     font-weight: 600;
+     border-radius: 8px;
+     cursor: pointer;
+     transition: all 0.3s ease;
+     box-shadow: 0 3px 8px rgba(255, 255, 255, 0.3);
+}
+
+.toggle-btn:hover {
+     background: #4a00e0;
+     color: #fff;
+     transform: scale(1.05);
+}
+
+.toggle-btn:active {
+     transform: scale(0.97);
 }
