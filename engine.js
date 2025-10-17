@@ -1,15 +1,22 @@
-alert("😀Welcome to the Biodata Creator! Please fill out the form to generate your biodata.");
 
-// ========================
+// =======================
 // Initial Setup
 // ========================   
 
 
+// Show welcome alert only once
 window.addEventListener("DOMContentLoaded", () => {
+     if (!localStorage.getItem("biodataAlertShown")) {
+          alert("😀Welcome to the Biodata Creator! Please fill out the form to generate your biodata.");
+          localStorage.setItem("biodataAlertShown", "true");
+     }
+
+     // Then run your usual setup
      restoreFormData();
      if (localStorage.getItem("biodataForm")) generateBiodata();
      addAutoSaveListeners();
 });
+
 
 // ========================
 // Form Validation
@@ -24,38 +31,81 @@ function validateForm() {
           { id: "address", label: "Address" }
      ];
 
+     // Validate required text fields
      for (let field of requiredFields) {
-          const value = document.getElementById(field.id)?.value.trim();
+          const el = document.getElementById(field.id);
+          const value = el ? el.value.trim() : "";
+          // remove previous error
+          const prevError = document.getElementById(field.id + "-error");
+          if (prevError) prevError.remove();
+
           if (!value) {
-               alert(`Please fill out the ${field.label} field.`);
-               document.getElementById(field.id).focus();
+               // create error message
+               const error = document.createElement("span");
+               error.id = field.id + "-error";
+               error.style.color = "red";
+               error.style.fontSize = "0.9em";
+               error.textContent = `Please fill out the ${field.label} field.`;
+               el.parentElement.appendChild(error);
+               el.focus();
                return false;
           }
      }
 
-     // Profile picture check (file input existence)   
-     const profilePicPreview = document.getElementById("profilePicPreview");
-     if (!profilePicPreview || !profilePicPreview.src || profilePicPreview.src.includes("default") || profilePicPreview.style.display === "none") {
-          alert("Please upload your Profile Picture.");
-          document.getElementById("profilePic").focus();
+     // Name validation
+     const name = document.getElementById("name")?.value.trim() || "";
+     if (name.length < 3) {
+          alert("Name must be at least 3 characters long.");
           return false;
      }
 
+     // Profile picture check
+     const profilePicPreview = document.getElementById("profilePicPreview");
+     const profilePicInput = document.getElementById("profilePic");
+     if (
+          !profilePicPreview ||
+          !profilePicPreview.src ||
+          profilePicPreview.src.includes("default") ||
+          profilePicPreview.style.display === "none"
+     ) {
+          alert("Please upload your Profile Picture.");
+          if (profilePicInput) profilePicInput.focus();
+          return false;
+     }
+
+     // Gender selection check
      const gender = document.querySelector('input[name="gender"]:checked');
-     if (!gender) { alert("Please select your gender."); return false; }
+     if (!gender) {
+          alert("Please select your gender.");
+          return false;
+     }
 
+     // Marital status check
      const marital = document.querySelector('input[name="marital"]:checked');
-     if (!marital) { alert("Please select your marital status."); return false; }
+     if (!marital) {
+          alert("Please select your marital status.");
+          return false;
+     }
 
-     const email = document.getElementById("email").value.trim();
+     // Email validation
+     const email = document.getElementById("email")?.value.trim() || "";
      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-     if (!emailPattern.test(email)) { alert("Please enter a valid email address."); return false; }
+     if (!emailPattern.test(email)) {
+          alert("Please enter a valid email address.");
+          return false;
+     }
 
-     const phone = document.getElementById("phone").value.trim();
-     if (!/^[0-9]{10}$/.test(phone)) { alert("Please enter a valid 10-digit phone number."); return false; }
+     // Phone number validation
+     const phone = document.getElementById("phone")?.value.trim() || "";
+     if (!/^[0-9]{10}$/.test(phone)) {
+          alert("Please enter a valid 10-digit phone number.");
+          return false;
+     }
 
      return true;
 }
+
+
 
 // ========================
 // Local Storage Functions
@@ -67,17 +117,18 @@ function saveFormDataLocally() {
           dob: document.getElementById("dob").value,
           gender: document.querySelector('input[name="gender"]:checked')?.value || "",
           nationality: document.getElementById("nationality").value,
+          religion: document.getElementById("religion").value,
           marital: document.querySelector('input[name="marital"]:checked')?.value || "",
           phone: document.getElementById("phone").value,
           email: document.getElementById("email").value,
           address: document.getElementById("address").value,
-          objective: document.getElementById("objective").value,
           skills: document.getElementById("skills").value,
+          languages: document.getElementById("languages").value,
           hobbies: document.getElementById("hobbies").value,
+          strengths: document.getElementById("strengths").value,
           profilePic: document.getElementById("profilePicPreview")?.src || "",
           education: getEducationData(),
-          projects: getProjectsData(),
-          strengths: getStrengthsData()
+
      };
      localStorage.setItem("biodataForm", JSON.stringify(data));
 }
@@ -157,54 +208,16 @@ function getEducationData() {
           const inputs = item.querySelectorAll("input");
           const [degree, school, marks, year] = Array.from(inputs).map(i => i.value.trim());
           if (degree || school || marks || year) {
-               eduArr.push(`${degree} at ${school} (${marks}%, ${year})`);
+               eduArr.push(`
+                <div style="margin-bottom:6px; font-size:1rem; color:#333;">
+                    <b>${degree}</b> at <span>${school}</span> – Completed in [${year}] - Marks: ${marks}%
+                </div>
+            `);
           }
      });
-     return eduArr.join("<br>");
+     return eduArr.join("");
 }
 
-// ========================
-// Projects Section
-// ========================
-function addProject() {
-     const section = document.getElementById("projects-section");
-     const item = document.createElement("div");
-     item.className = "project-item";
-     item.innerHTML = `
-        <input type="text" placeholder="Project Title" class="project-title" />
-        <textarea placeholder="Project Description" class="project-desc"></textarea>
-        <button type="button" onclick="removeProject(this)">Remove</button>
-    `;
-     section.appendChild(item);
-
-     // Autosave on new inputs
-     item.querySelector(".project-title").addEventListener("input", saveFormDataLocally);
-     item.querySelector(".project-desc").addEventListener("input", saveFormDataLocally);
-}
-function removeProject(btn) { btn.parentElement.remove(); }
-function getProjectsData() {
-     const items = document.querySelectorAll("#projects-section .project-item");
-     let arr = [];
-     items.forEach(item => {
-          const title = item.querySelector(".project-title").value.trim();
-          const desc = item.querySelector(".project-desc").value.trim();
-          if (title || desc) arr.push(`<b>${title}</b>${desc ? ": " + desc : ""}`);
-     });
-     return arr.length ? arr.join("<br>") : "";
-}
-
-// ========================
-// Strengths Section
-// ========================
-function getStrengthsData() {
-     const items = document.querySelectorAll("#strengths-section .strength-item .strength-input");
-     let arr = [];
-     items.forEach(input => {
-          const val = input.value.trim();
-          if (val) arr.push(val);
-     });
-     return arr.length ? arr.join(", ") : "";
-}
 
 // ========================
 // AI Suggestions
@@ -213,10 +226,29 @@ function suggestObjective() {
      const objInput = document.getElementById("objective");
      if (!objInput.value.trim()) objInput.value = "To obtain a challenging position in a reputable organization that allows me to apply my knowledge and skills, grow professionally, and contribute effectively to the team’s success";
 }
+
 function suggestStrengths() {
+     const items = document.querySelectorAll("#strengths-section .strength-item .strength-input");
+     let arr = [];
+
+     items.forEach(input => {
+          const val = input.value.trim();
+          if (val) arr.push(val);
+     });
+
      const strengthsInput = document.getElementById("strengths");
-     if (!strengthsInput.value.trim()) strengthsInput.value = "Quick Learner, Team Player, Adaptable, Leadership, Time Management";
+
+     if (arr.length) {
+          // Use entered strengths
+          strengthsInput.value = arr.join(", ");
+     } else if (!strengthsInput.value.trim()) {
+          // Use default suggestions if empty
+          strengthsInput.value = "Quick Learner, Team Player, Adaptable, Leadership, Time Management";
+     }
+
+     return strengthsInput.value;
 }
+
 function suggestHobbies() {
      const hobbiesInput = document.getElementById("hobbies");
      if (!hobbiesInput.value.trim()) hobbiesInput.value = "Reading, Music, Coding, Sports, Traveling";
@@ -245,8 +277,7 @@ function generateBiodata() {
      if (!validateForm()) return;
 
      const education = getEducationData();
-     const projects = getProjectsData();
-     const strengths = getStrengthsData();
+     // const strengths = getStrengthsData();
 
      const pic = document.getElementById("profilePicPreview");
      let profilePicHTML = "";
@@ -260,24 +291,25 @@ function generateBiodata() {
           dob: document.getElementById("dob").value,
           gender: document.querySelector('input[name="gender"]:checked')?.value || "",
           nationality: document.getElementById("nationality").value,
+          religion: document.getElementById("religion").value,
           marital: document.querySelector('input[name="marital"]:checked')?.value || "",
           phone: document.getElementById("phone").value,
           email: document.getElementById("email").value,
           address: document.getElementById("address").value,
-          objective: document.getElementById("objective").value,
           education: education,
           skills: document.getElementById("skills").value,
-          projects: projects,
-          strengths: strengths,
+          languages: document.getElementById("languages").value,
+          strengths: document.getElementById("strengths").value,
           hobbies: document.getElementById("hobbies").value,
+
      };
 
      let html = `
     <div class="a4-page">
-        <h2 style="text-align:center; color:var(--accent);">Bio-Data</h2>
+        <h2 style="text-align:center; color:var(--accent);margin-top: -0px;">Bio-Data <hr></h2>
         <div id="biodataContent">
        
-            <h2 style="text-align:center; color:var(--accent);">${data.name || ""}</h2>
+            <h2 style="text-align:center; color:var(--accent); margin-top: -5px;">${data.name || ""}</h2>
             <div class="section">
                 <h3>Personal Information</h3>
                      ${profilePicHTML}
@@ -285,12 +317,12 @@ function generateBiodata() {
                 ${data.dob ? `<p><b>Date of Birth:</b> ${data.dob}</p>` : ""}
                 ${data.gender ? `<p><b>Gender:</b> ${data.gender}</p>` : ""}
                 ${data.nationality ? `<p><b>Nationality:</b> ${data.nationality}</p>` : ""}
+                ${data.religion ? `<p><b>Religion:</b> ${data.religion}</p>` : ""}
                 ${data.marital ? `<p><b>Marital Status:</b> ${data.marital}</p>` : ""}
                 ${data.phone ? `<p><b>Contact:</b> ${data.phone}</p>` : ""}
                 ${data.email ? `<p><b>Email:</b> ${data.email}</p>` : ""}
                 ${data.address ? `<p><b>Address:</b> ${data.address}</p>` : ""}
             </div>
-            ${data.objective ? `<div class="section"><h3>Career Objective</h3><p>${data.objective}</p></div>` : ""}
             ${data.education ? `<div class="section"><h3>Educational Qualification</h3><p>${data.education}</p></div>` : ""}
             ${data.skills ? `<div class="section"><h3>Technical Skills</h3><ul>${data.skills
                .split(",")
@@ -298,7 +330,7 @@ function generateBiodata() {
                .map(skill => `<li>${skill.trim()}</li>`)
                .join("")
                }</ul></div>` : ""}
-            ${data.projects ? `<div class="section"><h3>Projects</h3><p>${data.projects}</p></div>` : ""}
+               ${data.languages ? `<div class="section"><h3>Languages Known</h3><p>${data.languages}</p></div>` : ""}
             ${data.strengths ? `<div class="section"><h3>Strengths</h3><p>${data.strengths}</p></div>` : ""}
             ${data.hobbies ? `<div class="section"><h3>Hobbies</h3><p>${data.hobbies}</p></div>` : ""}
             <div class="section">
@@ -313,7 +345,7 @@ function generateBiodata() {
             </p>
         </div>
     </div>`;
-     document.getElementById("biodataPreview").innerHTML = html;
+     document.getElementById("Preview").innerHTML = html;
      saveFormDataLocally();
 }
 
@@ -340,3 +372,18 @@ function downloadJPG() {
 function changeTheme(theme) {
      document.body.className = theme === "default" ? "" : theme;
 }
+
+
+// ========================
+// Toggle Forms
+// ========================
+function toggleForms() {
+     const biodataForm = document.getElementById("biodataForm");
+     const cvForm = document.getElementById("cvForm");
+     biodataForm.style.display = biodataForm.style.display === "none" ? "block" : "none";
+     cvForm.style.display = cvForm.style.display === "none" ? "block" : "none";
+     document.body.className = cvForm.style.display === "block" ? "cv-theme" : "biodata-theme";
+     saveFormDataLocally();
+     const toggleBtn = document.querySelector(".toggle-btn");
+     toggleBtn.textContent = cvForm.style.display === "block" ? "Switch to Biodata Creator" : "Switch to CV Creator";
+}    
