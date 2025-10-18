@@ -3,14 +3,12 @@
 // Initial Setup
 // ========================   
 
-
 // Show welcome alert only once
 window.addEventListener("DOMContentLoaded", () => {
      if (!localStorage.getItem("biodataAlertShown")) {
           alert("😀Welcome to the Biodata Creator! Please fill out the form to generate your biodata.");
           localStorage.setItem("biodataAlertShown", "true");
      }
-
      // Then run your usual setup
      restoreFormData();
      if (localStorage.getItem("biodataForm")) generateBiodata();
@@ -59,19 +57,23 @@ function validateForm() {
           return false;
      }
 
+
      // Profile picture check
      const profilePicPreview = document.getElementById("profilePicPreview");
-     const profilePicInput = document.getElementById("profilePic");
+     const profilePicInput = document.getElementById("profilePic"); // Declare it here
+
      if (
           !profilePicPreview ||
           !profilePicPreview.src ||
-          profilePicPreview.src.includes("default") ||
+          profilePicPreview.naturalWidth === 0 ||
           profilePicPreview.style.display === "none"
      ) {
           alert("Please upload your Profile Picture.");
-          if (profilePicInput) profilePicInput.focus();
+          if (profilePicInput) profilePicInput.focus(); // Now this is defined
           return false;
      }
+
+
 
      // Gender selection check
      const gender = document.querySelector('input[name="gender"]:checked');
@@ -127,7 +129,7 @@ function saveFormDataLocally() {
           hobbies: document.getElementById("hobbies").value,
           strengths: document.getElementById("strengths").value,
           profilePic: document.getElementById("profilePicPreview")?.src || "",
-          education: getEducationData(),
+          education: getBioEducationData(),
 
      };
      localStorage.setItem("biodataForm", JSON.stringify(data));
@@ -178,7 +180,7 @@ function addAutoSaveListeners() {
 // ========================
 // Education Section
 // ========================
-function bioaddEducation() {
+function addEducation() {
      const eduSection = document.getElementById("education-section");
      const eduItem = document.createElement("div");
      eduItem.className = "edu-item";
@@ -201,7 +203,7 @@ function bioaddEducation() {
      });
 }
 function removeEducation(btn) { btn.parentElement.remove(); }
-function getEducationData() {
+function getBioEducationData() {
      const eduItems = document.querySelectorAll("#education-section .edu-item");
      let eduArr = [];
      eduItems.forEach(item => {
@@ -210,7 +212,7 @@ function getEducationData() {
           if (degree || school || marks || year) {
                eduArr.push(`
                 <div style="margin-bottom:6px; font-size:1rem; color:#333;">
-                    <b>${degree}</b> at <span>${school}</span> – Completed in [${year}] - Marks: ${marks}%
+                    <b>${degree}</b> ||  <span>${school}</span> || Completed in [${year}] - Marks: ${marks}%
                 </div>
             `);
           }
@@ -276,13 +278,11 @@ function handlePictureUpload(event) {
 function generateBiodata() {
      if (!validateForm()) return;
 
-     const education = getEducationData();
-     // const strengths = getStrengthsData();
-
+     const education = getBioEducationData();
      const pic = document.getElementById("profilePicPreview");
      let profilePicHTML = "";
      if (pic && pic.src && pic.style.display !== "none") {
-          profilePicHTML = `<img src="${pic.src}" alt="Profile Picture" style="width:170px;height:180px;object-fit:fill;border-radius:25px;float:right;margin-left:2px;border:2px solid var(--accent);position:relative;right:40px;">`;
+          profilePicHTML = `<img src="${pic.src}" alt="Profile Picture" style="width:165px;height:175px;object-fit:fill;border-radius:25px;float:right;margin-left:2px;border:2px solid var(--accent);position:relative;right:40px;">`;
      }
 
      const data = {
@@ -296,7 +296,7 @@ function generateBiodata() {
           phone: document.getElementById("phone").value,
           email: document.getElementById("email").value,
           address: document.getElementById("address").value,
-          education: education,
+          education,
           skills: document.getElementById("skills").value,
           languages: document.getElementById("languages").value,
           strengths: document.getElementById("strengths").value,
@@ -349,12 +349,21 @@ function generateBiodata() {
      saveFormDataLocally();
 }
 
-function refreshForm() {
+function bioRefreshForm() {
      if (confirm("Are you sure you want to clear the form and start fresh?")) {
           localStorage.removeItem("biodataForm");
-          location.reload();
+          document.querySelectorAll("input, textarea, select").forEach(el => {
+               if (el.type === "radio" || el.type === "checkbox") el.checked = false;
+               else el.value = "";
+          });
+          const pic = document.getElementById("profilePicPreview");
+          if (pic) {
+               pic.src = "";
+               pic.style.display = "none";
+          }
      }
 }
+
 
 function downloadJPG() {
      generateBiodata(); // Ensure preview is up to date
@@ -363,7 +372,7 @@ function downloadJPG() {
           if (!node) return alert("Please generate biodata preview first.");
           html2canvas(node, { scale: 2 }).then(canvas => {
                const link = document.createElement('a');
-               link.download = 'Biodata.jpg';
+               link.download = 'From.jpg';
                link.href = canvas.toDataURL('image/jpeg', 1.0);
                link.click();
           });
@@ -380,11 +389,24 @@ function changeTheme(theme) {
 function toggleForms() {
      const biodataForm = document.getElementById("biodataForm");
      const cvForm = document.getElementById("cvForm");
-     biodataForm.style.display = biodataForm.style.display === "none" ? "block" : "none";
-     cvForm.style.display = cvForm.style.display === "none" ? "block" : "none";
-     document.body.className = cvForm.style.display === "block" ? "cv-theme" : "biodata-theme";
-     saveFormDataLocally();
      const toggleBtn = document.querySelector(".toggle-btn");
-     toggleBtn.textContent = cvForm.style.display === "block" ? "Switch to Biodata Creator" : "Switch to CV Creator";
-}    
+     previousFormData = {}; // to store previous form data
 
+
+     // Toggle form visibility
+     if (biodataForm.style.display === "none") {
+          biodataForm.style.display = "block";
+          cvForm.style.display = "none";
+          document.body.className = "biodata-theme";
+          toggleBtn.textContent = "Switch to CV Creator";
+          Preview.innerHTML = "Fill out the form to preview your biodata here.";
+     } else {
+          biodataForm.style.display = "none";
+          cvForm.style.display = "block";
+          document.body.className = "cv-theme";
+          toggleBtn.textContent = "Switch to Biodata Creator";
+          Preview.innerHTML = "Fill out the form to preview your CV here.";
+     }
+
+     saveFormDataLocally(); // autosave current form data
+}
