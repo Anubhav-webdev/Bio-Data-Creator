@@ -6,9 +6,9 @@
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>Biodata Creator with Themes</title>
      <link rel="stylesheet" href="style.css">
-     <!-- <script>
+     <script>
           document.addEventListener("contextmenu", (event) => event.preventDefault());
-     </script> -->
+     </script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
      <script src="engine.js" defer></script>
@@ -91,7 +91,7 @@
                          <input type="text" placeholder="e.g., 2024" />
                     </div>
                </div>
-               <button type="button" onclick="bioaddEducation()">➕ Add More Education</button>
+               <button type="button" onclick="addEducation()">➕ Add More Education</button>
 
                <label>Technical Skills</label>
                <textarea id="skills" rows="2" placeholder="Example: HTML, CSS, JS, Python"></textarea>
@@ -111,7 +111,7 @@
                </div>
                <button type="button" onclick="generateBiodata()">Preview Biodata</button>
                <button type="button" onclick="downloadJPG()">Download as JPG</button>
-               <button type="button" onclick="clearLocalData()">Refresh</button>
+               <button type="button" onclick="bioRefreshForm()">Refresh</button>
 
 
           </form>
@@ -160,7 +160,7 @@
                          <input type="text" placeholder="e.g., 2025" />
                     </div>
                </div>
-               <button type="button" onclick="addEducation()">➕ Add More Education</button>
+               <button type="button" onclick="cvAddEducation()">➕ Add More Education</button>
 
                <label>Technical Skills</label>
                <textarea id="cvSkills" rows="2" placeholder="Example: HTML, CSS, JS, Python"></textarea>
@@ -206,8 +206,12 @@
                </div>
           </div>
      </div>
+
+     <p
+          style="text-align:center; font-size:0.95rem; color:#ffffff; margin:20px auto 0; background: linear-gradient(90deg, #6a11cb, #2575fc); padding: 8px 12px; border-radius: 8px; max-width: 600px; margin-bottom: 10px;">
+          <strong>Notice:</strong> When leaving this site, please click the Refresh button.
+     </p>
+
 </body>
 
 </html>
-
-
