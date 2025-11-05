@@ -7,6 +7,13 @@
      --edu-color: #f0f8ff;
 }
 
+body,
+form,
+.preview {
+     transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+
 body.dark {
      --bg: #121212;
      --card: #1e1e1e;
@@ -384,4 +391,52 @@ select.theme {
 
 .toggle-btn:active {
      transform: scale(0.97);
+}
+
+
+/* Add to your style.css */
+.validation-error {
+     color: #ff3b30;
+     font-size: 0.8em;
+     margin-top: 4px;
+     display: block;
+     animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+     from {
+          opacity: 0;
+          transform: translateY(-10px);
+     }
+
+     to {
+          opacity: 1;
+          transform: translateY(0);
+     }
+}
+
+.validation-error {
+     color: #ff3b30;
+     font-size: 0.8em;
+     margin-top: 4px;
+     display: block;
+     animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+     from {
+          opacity: 0;
+          transform: translateY(-10px);
+     }
+
+     to {
+          opacity: 1;
+          transform: translateY(0);
+     }
+}
+
+input.error,
+textarea.error,
+select.error {
+     border-color: #ff3b30;
 }
